@@ -139,8 +139,5 @@ class RawDynamoDbQuery implements \IteratorAggregate, \ArrayAccess, \Countable
      *
      * @return array
      */
-    private function internal()
-    {
-        return [$this->op, $this->query];
-    }
+    
 }

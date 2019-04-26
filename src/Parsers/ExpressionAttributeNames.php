@@ -66,8 +66,5 @@ class ExpressionAttributeNames
         return $this;
     }
 
-    private function isNested($name)
-    {
-        return strpos($name, '.') !== false || (strpos($name, '[') !== false && strpos($name, ']') !== false);
-    }
+    
 }

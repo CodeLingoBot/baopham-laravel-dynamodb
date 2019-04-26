@@ -142,75 +142,19 @@ class Analyzer
      *
      * @return array
      */
-    private function getCondition($column)
-    {
-        return H::array_first($this->conditions, function ($condition) use ($column) {
-            return $condition['column'] === $column;
-        });
-    }
+    
 
     /**
      * @param $columns
      *
      * @return array
      */
-    private function getConditions($columns)
-    {
-        return array_filter($this->conditions, function ($condition) use ($columns) {
-            return in_array($condition['column'], $columns);
-        });
-    }
+    
 
     /**
      * @return Index|null
      */
-    private function getIndex()
-    {
-        if (empty($this->conditions)) {
-            return null;
-        }
+    
 
-        $index = null;
-
-        foreach ($this->model->getDynamoDbIndexKeys() as $name => $keysInfo) {
-            $conditionKeys = array_pluck($this->conditions, 'column');
-            $keys = array_values($keysInfo);
-
-            if (count(array_intersect($conditionKeys, $keys)) === count($keys)) {
-                if (!isset($this->indexName) || $this->indexName === $name) {
-                    $index = new Index(
-                        $name,
-                        array_get($keysInfo, 'hash'),
-                        array_get($keysInfo, 'range')
-                    );
-
-                    break;
-                }
-            }
-        }
-
-        if ($index && !$this->hasValidQueryOperator($index->hash, $index->range)) {
-            $index = null;
-        }
-
-        return $index;
-    }
-
-    private function hasValidQueryOperator($hash, $range = null)
-    {
-        $hashCondition = $this->getCondition($hash);
-
-        $validQueryOp = ComparisonOperator::isValidQueryDynamoDbOperator($hashCondition['type']);
-
-        if ($validQueryOp && $range) {
-            $rangeCondition = $this->getCondition($range);
-
-            $validQueryOp = ComparisonOperator::isValidQueryDynamoDbOperator(
-                $rangeCondition['type'],
-                true
-            );
-        }
-
-        return $validQueryOp;
-    }
+    
 }

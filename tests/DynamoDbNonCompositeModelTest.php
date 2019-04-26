@@ -993,37 +993,7 @@ class DynamoDbNonCompositeModelTest extends DynamoDbModelTest
         );
     }
 
-    private function assertUsingKeyAndFilterConditions($model)
-    {
-        foreach (range(0, 9) as $i) {
-            $this->seed([
-                'id' => ['S' => "$i"],
-                'count' => ['N' => $i],
-            ]);
-        }
-
-        $query = $model
-            ->where('id', '8')
-            ->where('count', '<=', 8);
-
-        $dynamoDbQuery = $query->toDynamoDbQuery();
-
-        $this->assertEquals('Query', $dynamoDbQuery->op);
-
-        $this->assertEquals(
-            '#id = :a1',
-            $dynamoDbQuery->query['KeyConditionExpression']
-        );
-
-        $this->assertEquals(
-            '#count <= :a2',
-            $dynamoDbQuery->query['FilterExpression']
-        );
-
-        $result = $query->get();
-        $this->assertEquals([8], $result->pluck('count')->toArray());
-        $this->assertEquals(['8'], $result->pluck('id')->toArray());
-    }
+    
 
     public function testUsingBothKeyAndFilterConditionsForModelWithoutIndex()
     {
